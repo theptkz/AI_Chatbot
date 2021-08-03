@@ -14,8 +14,8 @@ services:
       - ./api:/app/api
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    links: 
+      - db:db
   frontend:
     build: ./frontend
     command: ["npm", "start"]
