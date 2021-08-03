@@ -18,11 +18,12 @@ class Intent_Model(APIView):
         data = request.data
         for key in data:
             doc = data[key]
-        words = np.array([self.word2token(w) for w in word_tokenize(doc, format="text").split(' ')[:50] if (w in ModelsConfig.cbow_model.wv.key_to_index and w != '' and ((w +'\n') not in ModelsConfig.stopwords))])
-        words = np.pad(words, (50 - len(words)%50 , 0), 'constant')
-        a = ModelsConfig.modelRNN.predict(words.reshape((1, -1)) )
-        f = np.where(a>=0.5,1,0)
-        for (a,b) in zip(ModelsConfig.header, f[0]):
+        words = np.array([self.word2token(w) for w in word_tokenize(doc, format="text").split(' ')[:30] if (w in ModelsConfig.cbow_model.wv.key_to_index and w != '')])
+        words = np.pad(words, (30 - len(words)%30 , 0), 'constant')
+        predict_words = words.reshape((1, -1))
+        RNN_predict = ModelsConfig.modelRNN.predict(predict_words)
+        f1 = np.where(RNN_predict>=0.5,1,0)
+        for (a,b) in zip(ModelsConfig.header, f1[0]):
             if b == 1:
                 response_dict = {"Intent": a}
         return Response(response_dict, status=200)
