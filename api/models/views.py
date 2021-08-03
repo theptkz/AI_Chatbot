@@ -10,10 +10,18 @@ import numpy as np
 import underthesea
 from underthesea import word_tokenize
 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+
 
 # Create your views here.
 # Class based view to predict based on RNN model
 class Intent_Model(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
     def post(self, request, format=None):
         data = request.data
         for key in data:
