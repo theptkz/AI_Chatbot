@@ -1,4 +1,4 @@
-# Django & React application
+# Django & React AI Chatbot application
 
 ## Running
 
