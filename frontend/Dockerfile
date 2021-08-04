@@ -1,11 +1,29 @@
-FROM node
+FROM node:16-alpine3.12 as builder
 
-WORKDIR /app/frontend
-COPY package.json /app/frontend
+WORKDIR /usr/src/app/frontend
+COPY ./package.json /usr/src/app/frontend
+RUN apk add --no-cache g++ make python3 
 # copy our react project
-# COPY . /app/frontend
+COPY . /usr/src/app/frontend
 
-RUN npm install
+# perform npm build
+ARG API_SERVER
+ENV REACT_APP_API_SERVER=${API_SERVER}
+RUN REACT_APP_API_SERVER=${API_SERVER} \ 
+    npm run build
 
-EXPOSE 3000
-CMD ["npm", "start"]
+#########
+# FINAL #
+#########
+
+# pull official base image
+FROM node:16-alpine3.12
+
+# set work directory
+WORKDIR /usr/src/app/frontend
+
+# install serve - deployment static server suggested by official create-react-app
+RUN npm install -g serve
+
+# copy our build files from our builder stage
+COPY --from=builder /usr/src/app/frontend/build ./build
