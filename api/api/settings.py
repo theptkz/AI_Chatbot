@@ -128,7 +128,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#################################################################
-    ##  (CORS) Cross-Origin Resource Sharing Settings ##
-#################################################################
-CORS_ORIGIN_ALLOW_ALL = True
+#########################################
+    ##  IMPORT LOCAL SETTINGS ##
+#########################################
+
+try:
+    from .local_settings import * 
+except ImportError: 
+    pass 
