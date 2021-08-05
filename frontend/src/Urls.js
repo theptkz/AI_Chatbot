@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 import Login from "./components/Login";
-import Home from "./components/Home";
+import Chat from "./components/Chat";
 import PasswordUpdate from "./components/PasswordUpdate";
 
 // A wrapper for <Route> that redirects to the login screen if you're not yet authenticated.
@@ -32,11 +32,10 @@ function Urls(props) {
       <BrowserRouter>
         <Switch>
           <Route exact path='/login/'>
-            {" "}
             <Login {...props} />
           </Route>
           <PrivateRoute exact path='/' isAuthenticated={props.isAuthenticated}>
-            <Home {...props} />
+            <Chat {...props} className='container' />
           </PrivateRoute>
           <PrivateRoute
             exact
