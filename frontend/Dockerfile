@@ -2,7 +2,7 @@ FROM node:16-alpine3.12 as builder
 
 WORKDIR /usr/src/app/frontend
 COPY ./package.json /usr/src/app/frontend
-RUN apk add --no-cache g++ make python3 
+RUN apk add --no-cache g++ make python3 && npm install
 # copy our react project
 COPY . /usr/src/app/frontend
 

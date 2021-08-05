@@ -3,7 +3,7 @@ import Urls from "./Urls";
 import Layout from "./components/Layout";
 import { connect } from "react-redux";
 import * as actions from "./store/authActions";
-
+import "./App.css";
 function App(props) {
   // Similar to componentDidMount and componentDidUpdate:
   React.useEffect(() => {
