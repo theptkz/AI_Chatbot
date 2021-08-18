@@ -166,3 +166,4 @@ yarn-error.log*
 .npm/
 yarn.lock
 api/models/models/fasttext.model.wv.vectors_ngrams.npy
+
