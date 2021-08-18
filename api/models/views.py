@@ -9,6 +9,9 @@ import pandas as pd
 import numpy as np
 import underthesea
 from underthesea import word_tokenize
+import tensorflow as tf
+from tensorflow import keras
+from keras.preprocessing.sequence import pad_sequences
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -52,7 +55,4 @@ class Models(APIView):
         try:
             return ModelsConfig.cbow_model.wv.key_to_index[word]
         except KeyError:
-            return 0
-    def token2word(self, token):
-        return ModelsConfig.cbow_model.wv.index_to_key[token]
-        
+            return 0       
