@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 # Class based view to predict based on RNN model
-class Intent_Model(APIView):
+class Models(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -26,16 +26,27 @@ class Intent_Model(APIView):
         data = request.data
         for key in data:
             doc = data[key]
-        words = np.array([self.word2token(w) for w in word_tokenize(doc, format="text").split(' ')[:30] if (w in ModelsConfig.cbow_model.wv.key_to_index and w != '')])
-        words = np.pad(words, (30 - len(words)%30 , 0), 'constant')
-        predict_words = words.reshape((1, -1))
-        RNN_predict = ModelsConfig.modelRNN.predict(predict_words)
-        f1 = np.where(RNN_predict>=0.5,1,0)
-        for (a,b) in zip(ModelsConfig.header, f1[0]):
-            if b == 1:
-                response_dict = {"Intent": a}
+        doc = doc.lower()
+        words = np.array([self.word2token(w) for w in word_tokenize(doc, format="text").split(' ')[:30] if (w in ModelsConfig.fasttext.wv.key_to_index and w != '')])
+        words = pad_sequences([words], maxlen=30)
+        response_dict = {}
+        self.intentClassification(words, response_dict)
+        self.entityClassification(words, response_dict)
         return Response(response_dict, status=200)
 
+    def intentClassification(self, words, response_dict):
+        RNN_predict = ModelsConfig.modelRNN.predict(words)
+        f1 = np.where(RNN_predict>=0.5,1,0)
+        for (a,b) in zip(ModelsConfig.intent_header, f1[0]):
+            if b == 1:
+                response_dict["Intent"] = a
+                
+    def entityClassification(self, words, response_dict):
+        BiLSTM_predict = ModelsConfig.modelBiLSTM.predict(words)
+        f1 = np.where(BiLSTM_predict>=0.5,1,0)
+        for (a,b) in zip(ModelsConfig.entity_header, f1[0]):
+            if b == 1:
+                response_dict["Entity"] = a
 
     def word2token(self, word):
         try:
