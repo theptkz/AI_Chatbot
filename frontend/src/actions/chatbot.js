@@ -4,6 +4,8 @@ import {
   INPUT_FAIL,
   MESSAGE_FAIL,
   MESSAGE_SUCCESS,
+  FILE_SUCCESS,
+  FILE_FAIL,
 } from "./types";
 
 import axios from "axios";
@@ -31,5 +33,28 @@ export const sendMessage = (rest, message) => async (dispatch) => {
     })
     .catch((error) => {
       dispatch({ type: MESSAGE_FAIL });
+    });
+};
+
+export const sendFile = (rest, uploadfile) => async (dispatch) => {
+  console.log(uploadfile);
+  const formData = new FormData();
+  formData.append("file", uploadfile);
+  let headers = {
+    Authorization: `Token ${rest.token}`,
+  };
+  let url = settings.API_SERVER + "/api/upload/";
+  let method = "post";
+  let config = { headers, method, url, data: formData };
+  axios(config)
+    .then((res) => {
+      console.log(res);
+      dispatch({
+        type: FILE_SUCCESS,
+        payload: `File: ${res.data.file}`,
+      });
+    })
+    .catch((error) => {
+      dispatch({ type: FILE_FAIL });
     });
 };
