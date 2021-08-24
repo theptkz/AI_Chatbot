@@ -4,7 +4,7 @@ from tensorflow import keras
 from tensorflow.keras.models import load_model
 import gensim
 from gensim import models
-from gensim.models import Word2Vec
+from gensim.models import FastText
 import os
 
 class ModelsConfig(AppConfig):
@@ -18,7 +18,7 @@ class ModelsConfig(AppConfig):
     stopword_file = open(os.path.join(MLMODEL_FOLDER, "stopwords2.txt"), "r",encoding="utf8")
     stopwords = stopword_file.readlines()
     #Load CBOW model
-    cbow_model = Word2Vec.load(os.path.join(MLMODEL_FOLDER,"word2vec_cbow.model"))
+    fasttext = FastText.load(os.path.join(MLMODEL_FOLDER,"fasttext.model"))
     #header
     intent_header = ['Hello', 'Done', 'Connect', 'Order', 'Changing', 'Return', 'Other', 'Inform', 'Request', 'Feedback']
     entity_header = ['ID_product','color_product', 'meterial_product','cost_product','amount_product','Id member', 'shipping','height customer','weight customer','phone', 'address', 'size', 'Time', 'product_image']
