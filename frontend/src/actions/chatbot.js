@@ -4,6 +4,8 @@ import {
   INPUT_FAIL,
   MESSAGE_FAIL,
   MESSAGE_SUCCESS,
+  FILE_INPUT_SUCCESS,
+  FILE_INPUT_FAIL,
   FILE_SUCCESS,
   FILE_FAIL,
 } from "./types";
@@ -36,8 +38,20 @@ export const sendMessage = (rest, message) => async (dispatch) => {
     });
 };
 
+export const userFile = (uploadfile) => async (dispatch) => {
+  const fileURL = URL.createObjectURL(uploadfile);
+  console.log(fileURL.includes("http://"));
+  try {
+    dispatch({
+      type: FILE_INPUT_SUCCESS,
+      payload: fileURL,
+    });
+  } catch (err) {
+    dispatch({ type: FILE_INPUT_FAIL });
+  }
+};
+
 export const sendFile = (rest, uploadfile) => async (dispatch) => {
-  console.log(uploadfile);
   const formData = new FormData();
   formData.append("file", uploadfile);
   let headers = {

@@ -23,7 +23,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Chat = ({ chat, userMessage, sendMessage, sendFile, ...rest }) => {
+const Chat = ({
+  messages,
+  userMessage,
+  sendMessage,
+  sendFile,
+  userFile,
+  ...rest
+}) => {
   const [message, setMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const endOfMessages = useRef(null);
@@ -31,7 +38,7 @@ const Chat = ({ chat, userMessage, sendMessage, sendFile, ...rest }) => {
   const scrollToBottom = () => {
     endOfMessages.current.scrollIntoView({ behavior: "smooth" });
   };
-  useEffect(scrollToBottom, [chat]);
+  useEffect(scrollToBottom, [messages]);
 
   //  Function that handles user submission
   const handleClick = async (e) => {
@@ -46,6 +53,7 @@ const Chat = ({ chat, userMessage, sendMessage, sendFile, ...rest }) => {
 
   const handleUploadClick = (event) => {
     var file = event.target.files[0];
+    userFile(file);
     sendFile(rest, file);
   };
 
@@ -53,9 +61,22 @@ const Chat = ({ chat, userMessage, sendMessage, sendFile, ...rest }) => {
     <div className='container'>
       <h1>AI Chatbot</h1>
       <div className='historyContainer'>
-        {chat.length === 0
+        {messages.length === 0
           ? ""
-          : chat.map((msg) => <div className={msg.type}>{msg.message}</div>)}
+          : messages.map((msg) =>
+              msg.message.includes("http://") === true ? (
+                <div className={msg.type}>
+                  <img
+                    src={msg.message}
+                    alt='user-img'
+                    width='300'
+                    height='350'
+                  />
+                </div>
+              ) : (
+                <div className={msg.type}>{msg.message}</div>
+              )
+            )}
         <div ref={endOfMessages}></div>
       </div>
       <Grid
@@ -97,11 +118,12 @@ const Chat = ({ chat, userMessage, sendMessage, sendFile, ...rest }) => {
 };
 
 const mapStateToProps = (state) => ({
-  chat: state.chatbot.messages,
+  messages: state.chatbot.messages,
 });
 
 export default connect(mapStateToProps, {
   userMessage,
   sendMessage,
+  userFile,
   sendFile,
 })(Chat);
