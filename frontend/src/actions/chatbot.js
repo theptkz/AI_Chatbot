@@ -28,7 +28,7 @@ export const sendMessage = (rest, message) => async (dispatch) => {
     .then((res) => {
       dispatch({
         type: MESSAGE_SUCCESS,
-        payload: `Intent: ${res.data.Intent}, Entity: ${res.data.Entity}`,
+        payload: `${res.data.res}`,
       });
     })
     .catch((error) => {
