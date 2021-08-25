@@ -4,6 +4,8 @@ import {
   INPUT_FAIL,
   MESSAGE_SUCCESS,
   MESSAGE_FAIL,
+  FILE_INPUT_SUCCESS,
+  FILE_INPUT_FAIL,
 } from "../actions/types";
 
 //Initial state
@@ -29,6 +31,16 @@ export default (state = initialState, action) => {
         messages,
       };
     case MESSAGE_FAIL:
+      return {
+        ...state,
+      };
+    case FILE_INPUT_SUCCESS:
+      messages = [...messages, { message: payload, type: "user" }];
+      return {
+        ...state,
+        messages,
+      };
+    case FILE_INPUT_FAIL:
       return {
         ...state,
       };
